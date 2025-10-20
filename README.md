@@ -57,4 +57,4 @@ Built to test multiple regression pipelines — the winning setup combined **One
 
 ---
 
-⭐ *Technologies: Python, pandas, scikit-learn
+⭐ *Built with Python, pandas, scikit-learn, and curiosity about what truly drives housing prices in Singapore.*
