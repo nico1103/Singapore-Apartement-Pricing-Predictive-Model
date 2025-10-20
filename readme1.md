@@ -1,108 +1,60 @@
-Singapore Apartment Resale Price — Predictive Model (2017–2022)
+# 🏙️ Singapore Apartment Resale Price — Predictive Model (2017–2022)
 
-Turn real government data into clear price predictions.
-This project builds a regression model to estimate Singapore HDB resale prices using features like floor area, storey range, town, flat model, and distance to CBD/MRT (2017–2022 data).
+A machine learning model that predicts **Singapore HDB resale prices** using real government data (2017–2022).  
+Built to test multiple regression pipelines — the winning setup combined **One-Hot Encoding + Linear Regression**, delivering strong accuracy with interpretability.
 
-Result: A simple, interpretable pipeline—One-Hot Encoding + Linear Regression—consistently delivered the strongest generalization on held-out data: ~0.82 R² with ~$63k MAE.
+> 🎯 **Result:** ~0.82 R² on test data with ~\$63 K MAE.
 
-Why this project stands out
+---
 
-Real, official data (2017–2022) engineered into model-ready features
+## ✨ Highlights
+- Used **official Singapore government data** with 7 engineered features  
+- Compared **encoding methods** (One-Hot vs Label) and **polynomial degrees**  
+- Found that simplicity beats complexity — linear regression generalized best  
+- Transparent model: clear coefficients, strong real-world interpretability  
 
-Methodical comparisons: encoding strategies (OHE vs Label), polynomial degrees, and hyperparameters
+---
 
-Lean, interpretable winner: Linear Regression + OHE outperformed more complex variants while remaining easy to explain
+## 📊 Key Results
 
-Clear takeaways for non-ML stakeholders: which factors move price and by how much
+| Encoding | Degree | Train R² | Test R² | Test MAE |
+|:--|:--:|:--:|:--:|:--:|
+| 🟩 **One-Hot** | **1** | **0.883** | **0.822** | **≈ 63 K** |
+| Label | 2 | 0.848 | 0.808 | ≈ 65 K |
 
-Data & Features
+> One-Hot Encoding aligned best with linear regression’s assumptions, allowing category effects (town, storey, model type) to be cleanly captured.
 
-Source: Singapore government resale apartment data (2017–2022)
+---
+<details>
+<summary>🧩 Interpreting the model</summary>
 
-Key engineered features:
+- Global signal: Larger floor area and certain towns / flat models push prices up; longer years_remaining sustains value.  
+- Location signal: Shorter distance to CBD/MRT generally raises predicted price.  
+- Explainability: Linear coefficients provide transparent, per-feature contributions (ideal for stakeholders).
 
-closest_mrt_dist (km), cbd_dist (km)
+</details>
 
-town, storey_range, flat_model (categorical)
+<details>
+<summary>📘 Data, Ethics & Context</summary>
 
-floor_area_sqm, years_remaining (numeric)
+- **Source:** Singapore government resale apartment datasets (2017–2022)  
+- **Features:**
+  - Categorical: `town`, `storey_range`, `flat_model`
+  - Numerical: `floor_area_sqm`,`closest_mrt_dist`, `cbd_dist`, `years_remaining`
+- **Ethics:** Predictions are educational and should not be used for financial decisions.  
+- **Limitations:** Model reflects historical data; retraining is recommended as housing policies evolve.
 
-The notebook contains full cleaning and preprocessing steps.
+</details>
 
-Approach
-             ┌────────────────────────────────────────────────────┐
-Data Source ─►  Load & Clean  ─►  Feature Engineering  ─►  Split  │
-             └────────────────────────────────────────────────────┘
-                                             │(train/test)
-                                             ▼
-                 ┌───────────────────────────────────────────────┐
-                 │  Encode categoricals (OHE / Label)            │
-                 │  Try polynomial degrees (1, 2, …)             │
-                 │  Train Linear Regression                      │
-                 │  Evaluate (MAE, MSE, R²)                      │
-                 └───────────────────────────────────────────────┘
-                                             ▼
-                              Select best config (OHE + degree 1)
+<details>
+<summary>🚀 Future Ideas</summary>
 
-Experiments & Results (rounded)
-Encoding	Degree	Train MAE	Train R²	Test MAE	Test R²
-One-Hot	1	≈ 54.3k	≈ 0.883	≈ 63.1k	≈ 0.822
-Label	2	≈ 61.2k	≈ 0.848	≈ 65.0k	≈ 0.808
+- Add **regularized regressors** (Ridge/Lasso) for smoother coefficients  
+- Try **tree-based models** with feature importance comparison  
+- Build a small **Streamlit dashboard** for interactive predictions  
+- Include **uncertainty intervals** for stakeholder confidence  
+</details>
 
-Why OHE + Linear Regression?
-One-hot encoding exposes per-category offsets that align with linear regression’s assumptions. That lets the model learn distinct price lifts/drops for each town, storey range, and flat model without forcing arbitrary ordinality (a problem for label encoding). The result: higher R² and lower MAE on test data, with coefficients that are easy to interpret.
+---
 
-Repository structure
-.
-├── Project.ipynb            # Full workflow: prep → modeling → evaluation
-├── 20_record_per_town.csv   # Sample data slice used by the notebook
-├── Group E final.pptx.pdf   # Slides with experiment tables & visuals
-└── README.md
-
-How to use (high-level)
-
-Open Project.ipynb to see data prep, feature engineering, encoding comparisons, and model evaluation.
-
-The notebook cells can be run top-to-bottom to reproduce results with the included sample CSV (or point to the full dataset if you have it).
-
-If you’d like full “clone-and-run” instructions with a requirements.txt, say the word and I’ll add them.
-
-Interpreting the model
-
-Global signal: Larger floor area and certain towns / flat models push prices up; longer years_remaining sustains value.
-
-Location signal: Shorter distance to CBD/MRT generally raises predicted price.
-
-Explainability: Linear coefficients provide transparent, per-feature contributions (ideal for stakeholders).
-
-Ethics, provenance & limits
-
-Data is from official Singapore government sources (publicly available).
-
-Predictions reflect historical relationships (2017–2022) and do not constitute financial advice.
-
-Out-of-distribution shifts (policy changes, economic shocks) can reduce accuracy; periodic retraining is recommended.
-
-Future improvements
-
-Add regularization (Ridge/Lasso) for stability across splits
-
-Explore tree-based baselines (RF/XGBoost) with careful leakage prevention
-
-Calibrate prediction intervals for decision-grade uncertainty
-
-Expand feature set (amenities density, school proximity, renovation proxies)
-             
-             ┌────────────────────────────────────────────────────┐
-Data Source ─►  Load & Clean  ─►  Feature Engineering  ─►  Split  │
-             └────────────────────────────────────────────────────┘
-                                             │(train/test)
-                                             ▼
-                 ┌───────────────────────────────────────────────┐
-                 │  Encode categoricals (OHE / Label)            │
-                 │  Try polynomial degrees (1, 2, …)             │
-                 │  Train Linear Regression                      │
-                 │  Evaluate (MAE, MSE, R²)                      │
-                 └───────────────────────────────────────────────┘
-                                             ▼
-                              Select best config (OHE + degree 1)
+⭐ *Built with Python, pandas, scikit-learn, and curiosity about what truly drives housing prices in Singapore.*
